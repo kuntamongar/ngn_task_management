@@ -161,9 +161,9 @@ File: style.css
         }
       }
     }
-    .auth-form {
-      background: $pc-body;
-    }
+    // .auth-form {
+      // background: $pc-body;
+    // }
     @each $color, $value in $pctheme-colors {
       .pc-header .pc-head-link.head-link-#{$color} {
         background: shift-color($value, $soft-bg-level);
