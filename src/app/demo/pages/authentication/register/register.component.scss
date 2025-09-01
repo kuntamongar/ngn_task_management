@@ -1,1 +1,38 @@
-// This file is intentionally left empty to allow customers to add custom CSS if needed.
+// Compact form styles
+:host ::ng-deep {
+  .form-floating {
+    margin-bottom: 0.5rem;
+    
+    .form-control, .form-select {
+      height: calc(2.5rem + 2px);
+      padding: 0.375rem 0.75rem;
+      font-size: 0.9rem;
+    }
+    
+    label {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+    }
+    
+    textarea.form-control {
+      height: auto;
+      min-height: 80px;
+    }
+  }
+  
+  h2 {
+    margin-top: 1rem !important;
+    font-size: 1.5rem;
+  }
+  
+  .card {
+    margin-top: 0.5rem;
+  }
+  
+  .img-thumbnail {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    background-color: #fff;
+  }
+}

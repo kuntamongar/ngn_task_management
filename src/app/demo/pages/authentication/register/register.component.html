@@ -14,48 +14,125 @@
               </div>
             </div>
           </div>
-          <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted" style="width: 100%">
-            <img src="assets/images/authentication/google-icon.svg" alt="google" />
-            Sign Up With Google
-          </button>
-          <div class="saprator mt-3">
-            <span>or</span>
+         
+          <!-- Success Message -->
+          <div *ngIf="successMessage" class="alert alert-success" role="alert">
+            {{ successMessage }}
           </div>
-          <h5 class="my-4 d-flex justify-content-center">Sign Up with Email address</h5>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
-                <label for="floatingInput">First Name</label>
+          
+          <!-- Error Message -->
+          <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+            {{ errorMessage }}
+          </div>
+          
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" [class.was-validated]="registerForm.invalid && (registerForm.dirty || registerForm.touched)">
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="First Name" required />
+              <label for="firstName">First Name</label>
+              <div *ngIf="registerForm.get('firstName')?.invalid && (registerForm.get('firstName')?.dirty || registerForm.get('firstName')?.touched)" class="invalid-feedback">
+                First name is required
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
-                <label for="floatingInput">Last Name</label>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="middleName" formControlName="middleName" placeholder="Middle Name" />
+              <label for="middleName">Middle Name (Optional)</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Last Name" required />
+              <label for="lastName">Last Name</label>
+              <div *ngIf="registerForm.get('lastName')?.invalid && (registerForm.get('lastName')?.dirty || registerForm.get('lastName')?.touched)" class="invalid-feedback">
+                Last name is required
               </div>
             </div>
-          </div>
-          <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
-            <label for="floatingInput">Email Address / Username</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
-            <label for="floatingInput">Password</label>
-          </div>
-          <div class="form-check mt-3s">
-            <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
-            <label class="form-check-label" for="customCheckc1">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email" required />
+                  <label for="email">Email Address</label>
+                  <div *ngIf="registerForm.get('email')?.errors?.['required'] && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)" class="invalid-feedback">
+                    Email is required
+                  </div>
+                  <div *ngIf="registerForm.get('email')?.errors?.['email'] && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)" class="invalid-feedback">
+                    Please enter a valid email address
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="userId" formControlName="userId" placeholder="User ID" required />
+                  <label for="userId">User ID</label>
+                  <div *ngIf="registerForm.get('userId')?.invalid && (registerForm.get('userId')?.dirty || registerForm.get('userId')?.touched)" class="invalid-feedback">
+                    User ID is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <div *ngIf="isRolesLoading" class="d-flex align-items-center">
+                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span>Loading roles...</span>
+                  </div>
+                  <select *ngIf="!isRolesLoading" class="form-select" id="roleId" formControlName="roleId" required>
+                    <option value="">Select a role</option>
+                    <option *ngFor="let role of roles" [value]="role.roleId">{{ role.roleName }}</option>
+                  </select>
+                  <div *ngIf="!isRolesLoading && !roles.length" class="text-danger">
+                    No roles available. Please try again later.
+                  </div>
+                  <label for="roleId">Role</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="tel" class="form-control" id="mobileNo" formControlName="mobileNo" placeholder="Mobile Number" required pattern="[0-9]{8}" />
+                  <label for="mobileNo">Mobile Number</label>
+                  <div *ngIf="registerForm.get('mobileNo')?.errors?.['required'] && (registerForm.get('mobileNo')?.dirty || registerForm.get('mobileNo')?.touched)" class="invalid-feedback">
+                    Mobile number is required
+                  </div>
+                  <div *ngIf="registerForm.get('mobileNo')?.errors?.['pattern'] && (registerForm.get('mobileNo')?.dirty || registerForm.get('mobileNo')?.touched)" class="invalid-feedback">
+                    Please enter a valid 8-digit mobile number
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="presentAddress" class="form-label">Present Address</label>
+              <textarea class="form-control" id="presentAddress" formControlName="presentAddress" rows="4" required></textarea>
+              <div *ngIf="registerForm.get('presentAddress')?.invalid && (registerForm.get('presentAddress')?.dirty || registerForm.get('presentAddress')?.touched)" class="invalid-feedback d-block">
+                Present address is required
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="photoUpload" class="form-label">Profile Photo (Optional)</label>
+              <input type="file" class="form-control" id="photoUpload" (change)="onFileSelected($event)" accept="image/*" />
+              <div class="mt-2" *ngIf="photoPreviewUrl">
+                <img [src]="photoPreviewUrl" alt="Photo Preview" class="img-thumbnail" style="max-width: 150px; max-height: 150px;" />
+              </div>
+            </div>
+          <div class="form-check mt-3">
+            <input class="form-check-input input-primary" type="checkbox" id="termsAccepted" formControlName="termsAccepted" />
+            <label class="form-check-label" for="termsAccepted">
               <h5>
                 Agree with
                 <span>Terms & Condition.</span>
               </h5>
             </label>
+            <div *ngIf="registerForm.get('termsAccepted')?.invalid && registerForm.get('termsAccepted')?.touched" class="invalid-feedback d-block">
+              You must accept the terms and conditions
+            </div>
           </div>
           <div class="d-grid mt-4">
-            <button type="button" class="btn btn-secondary p-2">Sign Up</button>
+            <button type="submit" class="btn btn-secondary p-2" [disabled]="!registerForm.valid || isLoading">
+              <span *ngIf="!isLoading">Sign Up</span>
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span *ngIf="isLoading"> Creating Account...</span>
+            </button>
           </div>
+          </form>
           <hr />
           <h5 class="d-flex justify-content-center">
             <a [routerLink]="['/login']">Already have an account?</a>
